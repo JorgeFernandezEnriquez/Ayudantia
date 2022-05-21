@@ -1,22 +1,18 @@
 <?php
-    $server = "localhost";
-    $user = "root";
-    $contra = "";
-    $bd = "ayudantia";
-    $conex =new mysqli($server,$user,$contra,$bd);
-        if(!$conex){
-            echo "error en el servidor";
-        }
-        $id=1;
-        if(!empty($_GET['id'])){
-            $idimg=$_GET['id'];
-        }else{
-            $idimg=$id;
-        }
-        $consulta = "SELECT id, url FROM Imagenes WHERE id=$idimg";
-        $resultado = mysqli_query($conex,$consulta);
-        $dato = $resultado->fetch_assoc();
-        $imagen = $dato["url"];
+include("con_db.php");
+    if(!$conex){
+        echo "error en el servidor";
+    }
+    $id=1;
+    if(!empty($_GET['id'])){
+        $idimg=$_GET['id'];
+    }else{
+        $idimg=$id;
+    }
+    $consulta = "SELECT id, url FROM Imagenes WHERE id=$idimg";
+    $resultado = mysqli_query($conex,$consulta);
+    $dato = $resultado->fetch_assoc();
+    $imagen = $dato["url"];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,10 +25,21 @@
 </head>
 <body>
     <h1>Actividad</h1>
+    <form  method="post">
+        <input type="text" name="url">
+        <input type="submit" name="crear" value="Guardar Imagen">
+        <?php
+        include("crear.php")
+        ?>
+    </form>
+   
+    
     <table>
         <tr>
             <th>ID</th>
             <th>URL</th>
+            <th>MODIFICAR</th>
+            <th>ELIMINAR</th>
         </tr>
         <?php 
             $sql="SELECT * FROM Imagenes ORDER BY id";
@@ -43,6 +50,8 @@
                       <tr>
                       <td><a href="index.php?id='.$datos['id'].'">'.$datos['id'].'</a></td>
                       <td>'.$datos['url'].'</td>
+                      <td><a href="update.php?id='.$datos['id'].'">MODIFICAR</a></td>
+                      <td><a href="delete.php?id='.$datos['id'].'">ELIMINAR</a></td>  
                       </tr>';
             }
         ?>
